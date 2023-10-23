@@ -23,7 +23,6 @@ async def set_mages(message: types.Message, state: FSMContext):
         res = data.get('data') + id
     else:
         res = id
-    print(res)
     await state.set_data({
         "data": res
     })
@@ -33,9 +32,10 @@ async def set_mages(message: types.Message, state: FSMContext):
 async def close(message: types.Message, state: FSMContext):
     if message.text.lower() == "stop":
         c = test.count_users()
-        count = len(c) + 2 if c is not None else 1
+        count = len(c) + 1 if c is not None else 1
         d = (await state.get_data("data")).get("data")
         print(d)
+        print(count)
         print(f"count {count}, data: {d} {d is str}")
         test.add_user(id=count, media=d, answers="No data")
         await AnswersState.waiting.set()
@@ -52,8 +52,13 @@ async def type_error(message: types.Message):
 
 @dp.message_handler(state=AnswersState.waiting, content_types=ContentType.TEXT)
 async def answers(message: types.Message, state: FSMContext):
-    c = test.count_users()
-    id = len(c) + 2 if c is not None else 1
-    test.update_user_answers(answers=message.text, id=id)
-    await message.reply(f"Test qabul qilindi, test <b>codi: {id}</b>")
-    await state.finish()
+    res = message.text.lower().replace("a", "").replace("b", "").replace("c", "").replace("d", "").replace("e", "")
+    print(f"res: {res}")
+    if len(res) == 0:
+        c = test.count_users()
+        id = len(c) + 1 if c is not None else 1
+        test.update_user_answers(answers=message.text, id=id)
+        await message.reply(f"Test <b>codi: {id}</b>\n\n@sardor_math_test_bot-testni ushbu botda yeching!")
+        await state.finish()
+    else:
+        await message.answer("Testda faqat <b>'a,b,c,d,e'</b> kalitlarini kiritish mumkin")

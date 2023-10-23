@@ -23,7 +23,8 @@ async def contact_required(message: Message, state: FSMContext):
     except sqlite3.IntegrityError as err:
         await bot.send_message(chat_id="1038753516", text=err)
         await state.finish()
-        await message.answer(f"Siz avvaldan bazada bor ekansiz, botdan bemmalol foydalanishingiz mumkin!")
+        await message.answer(f"Siz avvaldan bazada bor ekansiz, botdan bemmalol foydalanishingiz mumkin!",
+                             reply_markup=ReplyKeyboardRemove())
 
 
 @dp.message_handler(state=ContactState.waiting)
