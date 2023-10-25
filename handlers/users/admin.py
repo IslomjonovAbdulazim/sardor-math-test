@@ -28,6 +28,7 @@ async def admin_test(message: types.Message):
         print(f'data: {data}')
         _sort = {}
         await message.reply("Biroz kutib turing...")
+
         for res in data:
             _sort[str(res[0])] = res[1]
         _sort = dict(reversed(sorted(_sort.items())))
