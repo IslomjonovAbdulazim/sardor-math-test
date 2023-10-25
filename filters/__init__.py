@@ -1,5 +1,5 @@
 from aiogram import Dispatcher
-
+from . import admins
 from loader import dp
 # from .is_admin import AdminFilter
 

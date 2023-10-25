@@ -8,6 +8,7 @@ from aiogram.types import InputMediaPhoto, ContentType, CallbackQuery
 from keyboards.inline.sure import sure_inline
 from loader import db, dp, bot, test, results
 from states.check import CheckState
+import asyncio
 from states.confirm_state import ConfirmState
 
 
