@@ -15,6 +15,12 @@ from states.time import TimeState
 from phonenumbers import format_number
 
 
+@dp.message_handler(text="/new_test", user_id=ADMINS)
+async def new_test(message: types.Message):
+    await message.reply("Avvalo test rasmlarini jo'nating, to'xtatish uchun <b>stop</b> so'zini yozing")
+    await ImageState.waiting.set()
+
+
 @dp.message_handler(user_id=ADMINS)
 async def admin_test(message: types.Message):
     _data = results.select_all_users()
@@ -47,12 +53,6 @@ async def admin_test(message: types.Message):
             await message.reply("Hali bu testni heckkim ishlamagan")
     else:
         await message.reply("Test topilmadi")
-
-
-@dp.message_handler(text="/new_test", user_id=ADMINS)
-async def new_test(message: types.Message):
-    await message.reply("Avvalo test rasmlarini jo'nating, to'xtatish uchun <b>stop</b> so'zini yozing")
-    await ImageState.waiting.set()
 
 
 @dp.message_handler(state=ImageState.waiting, content_types=ContentType.PHOTO)
