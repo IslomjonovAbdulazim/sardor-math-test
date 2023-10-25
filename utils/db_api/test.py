@@ -1,3 +1,5 @@
+import calendar
+from datetime import time, date, datetime
 import sqlite3
 
 
@@ -34,6 +36,9 @@ class DatabaseTest:
             id int NOT NULL,
             media varchar(1000) NOT NULL,
             answers varchar(256) NOT NULL,
+            start timestamp not null,
+            end timestamp not null,
+            time int not null,
             PRIMARY KEY (id)
         );
         """
@@ -46,11 +51,11 @@ class DatabaseTest:
         ])
         return sql, tuple(parameters.values())
 
-    def add_user(self, id: int, media: str, answers: str):
+    def add_user(self, id: int, media: str, answers: str, start: datetime, end: datetime, t: int):
         sql = """
-        INSERT INTO Users(id, media, answers) VALUES (?,?,?)
+        INSERT INTO Users(id, media, answers, start, end, time) VALUES (?,?,?,?,?,?)
         """
-        self.execute(sql, parameters=(id, media, answers), commit=True)
+        self.execute(sql, parameters=(id, media, answers, start.timestamp(), end.timestamp(), t), commit=True)
 
     def select_all_users(self):
         sql = """
@@ -71,6 +76,24 @@ class DatabaseTest:
         UPDATE Users SET answers=? WHERE id=?
         """
         return self.execute(sql, parameters=(answers, id), commit=True)
+
+    def update_user_start(self, time, id):
+        sql = f"""
+        UPDATE Users SET start=? WHERE id=?
+        """
+        return self.execute(sql, parameters=(time, id), commit=True)
+
+    def update_user_end(self, time, id):
+        sql = f"""
+        UPDATE Users SET end=? WHERE id=?
+        """
+        return self.execute(sql, parameters=(time, id), commit=True)
+
+    def update_user_time(self, time, id):
+        sql = f"""
+        UPDATE Users SET time=? WHERE id=?
+        """
+        return self.execute(sql, parameters=(time, id), commit=True)
 
     def delete_users(self):
         self.execute("delete from Users where TRUE", commit=True)
