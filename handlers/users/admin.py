@@ -1,3 +1,4 @@
+import operator
 from datetime import datetime
 
 import phonenumbers
@@ -23,21 +24,25 @@ async def new_test(message: types.Message):
 
 @dp.message_handler(user_id=ADMINS)
 async def admin_test(message: types.Message):
+    _end = False
+    txt = message.text
+    if txt[-1] == ".":
+        _end = True
+        txt = txt[:-1]
+    print(f'txtttttttttttttttttttttttttttttttttttttttttttttttt {txt}a')
     _data = results.select_all_users()
-    d = test.select_user(id=message.text)
+    d = test.select_user(id=txt)
     if _data is not None and d is not None:
         data = []
         for d in _data:
-            if str(d[5]) == message.text:
+            if str(d[5]) == txt:
                 print('in')
                 data.append(d)
         print(f'data: {data}')
         _sort = {}
-        await message.reply("Biroz kutib turing...")
-
         for res in data:
             _sort[str(res[0])] = res[1]
-        _sort = dict(reversed(sorted(_sort.items())))
+        _sort = dict(sorted(_sort.items(), reverse=True, key=operator.itemgetter(1)))
         result = ""
         t = 0
         for k, v in _sort.items():
@@ -46,7 +51,9 @@ async def admin_test(message: types.Message):
             user = db.select_user(id=int(r[4]))
             num = format_number(phonenumbers.parse(user[2], "UZ"), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
             percent = str(100 * r[1] / len(str(r[8]).split(',')))
-            result += f"<b>{t}: 👤{user[1]}\n✅{r[1]}  ❌{r[2]}  ℹ️{r[3]}      {percent[:4]}%\n🅰️@{user[5]} ☎️{str(num)[5:]}</b>\n\n"
+            p1 = f"{t}: 👤{user[1]}\n✅{r[1]}  ❌{r[2]}  ℹ️{r[3]}      {percent[:4]}%"
+            p2 = "\n\n" if _end else f"\n<tg-spoiler>🅰️@{user[5]} ☎️{str(num)[5:]}</tg-spoiler>\n\n"
+            result += f"<b>{p1}{p2}</b>"
         if len(result) != 0:
             await message.reply(result)
         else:

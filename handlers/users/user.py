@@ -35,7 +35,7 @@ async def start(message: types.Message, state: FSMContext):
             _e = e.strftime("%H:%M")
             if eend <= now:
                 await message.reply(f"Bu test <b>{end}</b> da <b>yakunlangan</b>!")
-            elif sstart >= e:
+            elif sstart >= now:
                 await message.reply(f"Bu test <b>{sta}</b> da <b>boshlanadi</b>!")
             else:
                 photos = str(data[1]).split(",")[:-1]

@@ -26,7 +26,7 @@ async def on_startup(dispatcher):
         results.create_table_users()
     except Exception as err:
         print(err)
-    print(results.select_all_users())
+    print(db.select_all_users())
     await on_startup_notify(dispatcher)
 
 
