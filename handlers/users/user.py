@@ -15,6 +15,11 @@ from states.confirm_state import ConfirmState
 @dp.message_handler()
 async def start(message: types.Message, state: FSMContext):
     id = message.text
+    _d = db.select_user(id=message.from_user.id)
+    print(_d)
+    if _d is None:
+        await message.reply("Bazadan sizni topa olmadik. Ro'yxatdan o'ting, /start comandasining ustiga bosish orqali!")
+        return
     data = test.select_user(id=id)
     if data is not None:
         result_id = str(message.from_user.id) + id
@@ -24,8 +29,6 @@ async def start(message: types.Message, state: FSMContext):
             await message.reply(
                 f"Sizning bu test bo'yicha <b>natijangiz</b>:\n✅{result[1]}    ❌{result[2]}     ℹ️{result[3]}\n{percent[:4]}%")
         else:
-            print(data)
-            print(data[5])
             now = datetime.now()
             e = now + timedelta(minutes=data[5])
             sstart = datetime.fromtimestamp(data[3])

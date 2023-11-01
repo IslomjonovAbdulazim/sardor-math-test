@@ -18,12 +18,20 @@ from phonenumbers import format_number
 
 @dp.message_handler(text="/new_test", user_id=ADMINS)
 async def new_test(message: types.Message):
+    _d = db.select_user(id=message.from_user.id)
+    if _d is None:
+        await message.reply("Bazadan sizni topa olmadik. Ro'yxatdan o'ting, /start comandasining ustiga bosish orqali!")
+        return
     await message.reply("Avvalo test rasmlarini jo'nating, to'xtatish uchun <b>stop</b> so'zini yozing")
     await ImageState.waiting.set()
 
 
 @dp.message_handler(user_id=ADMINS)
 async def admin_test(message: types.Message):
+    _d = db.select_user(id=message.from_user.id)
+    if _d is None:
+        await message.reply("Bazadan sizni topa olmadik. Ro'yxatdan o'ting, /start comandasining ustiga bosish orqali!")
+        return
     _end = False
     txt = message.text
     if txt[-1] == ".":
@@ -51,7 +59,9 @@ async def admin_test(message: types.Message):
             user = db.select_user(id=int(r[4]))
             num = format_number(phonenumbers.parse(user[2], "UZ"), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
             percent = str(100 * r[1] / len(str(r[8]).split(',')))
-            p1 = f"{t}: 👤{user[1]}\n✅{r[1]}  ❌{r[2]}  ℹ️{r[3]}      {percent[:4]}%"
+            # time = ((datetime.fromtimestamp(r[7]))-(datetime.fromtimestamp(r[6]))).seconds
+            # __t = datetime.fromtimestamp(time).strftime("%H:%M:%S")
+            p1 = f"{t}: 👤{user[1]}\n✅{r[1]}, ❌{r[2]}, ℹ️{r[3]}, {percent[:4]}%"
             p2 = "\n\n" if _end else f"\n<tg-spoiler>🅰️@{user[5]} ☎️{str(num)[5:]}</tg-spoiler>\n\n"
             result += f"<b>{p1}{p2}</b>"
         if len(result) != 0:
